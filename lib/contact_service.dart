@@ -23,8 +23,8 @@ class ContactService {
     }
   }
 
-  Contact _fromJson(String json) {
-    Map<String, dynamic> map = JSON.decode(json);
+  Contact _fromJson(String jsonInput) {
+    Map<String, dynamic> map = json.decode(jsonInput);
     var contact = new Contact();
     contact.name = map['name'];
     contact.dob = new DateFormat.yMd().parseStrict(map['dob']);
@@ -41,7 +41,7 @@ class ContactService {
     mapData["phone"] = contact.phone;
     mapData["email"] = contact.email;
     mapData["favoriteColor"] = contact.favoriteColor;
-    String json = JSON.encode(mapData);
-    return json;
+    String jsonString = json.encode(mapData);
+    return jsonString;
   }
 }
