@@ -85,10 +85,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void showMessage(String message, [MaterialColor color = Colors.red]) {
-    _scaffoldKey.currentState
-        .showSnackBar(new SnackBar(backgroundColor: color, content: new Text(message)));
+    _scaffoldKey.currentState.showSnackBar(
+        new SnackBar(backgroundColor: color, content: new Text(message)));
   }
-  
+
   void _submitForm() {
     final FormState form = _formKey.currentState;
 
@@ -106,10 +106,8 @@ class _MyHomePageState extends State<MyHomePage> {
       print('========================================');
       print('Submitting to back end...');
       var contactService = new ContactService();
-      contactService.createContact(newContact)
-      .then((value) => 
-        showMessage('New contact created for ${value.name}!', Colors.blue)
-      );
+      contactService.createContact(newContact).then((value) =>
+          showMessage('New contact created for ${value.name}!', Colors.blue));
     }
   }
 
@@ -189,30 +187,39 @@ class _MyHomePageState extends State<MyHomePage> {
                         : 'Please enter a valid email address',
                     onSaved: (val) => newContact.email = val,
                   ),
-                  new InputDecorator(
-                    decoration: const InputDecoration(
-                      icon: const Icon(Icons.color_lens),
-                      labelText: 'Color',
-                    ),
-                    isEmpty: _color == '',
-                    child: new DropdownButtonHideUnderline(
-                      child: new DropdownButton<String>(
-                        value: _color,
-                        isDense: true,
-                        onChanged: (String newValue) {
-                          setState(() {
-                            newContact.favoriteColor = newValue;
-                            _color = newValue;
-                          });
-                        },
-                        items: _colors.map((String value) {
-                          return new DropdownMenuItem<String>(
-                            value: value,
-                            child: new Text(value),
-                          );
-                        }).toList(),
-                      ),
-                    ),
+                  new FormField<String>(
+                    builder: (FormFieldState<String> state) {
+                      return InputDecorator(
+                        decoration: InputDecoration(
+                          icon: const Icon(Icons.color_lens),
+                          labelText: 'Color',
+                          errorText: state.hasError ? state.errorText : null,
+                        ),
+                        isEmpty: _color == '',
+                        child: new DropdownButtonHideUnderline(
+                          child: new DropdownButton<String>(
+                            value: _color,
+                            isDense: true,
+                            onChanged: (String newValue) {
+                              setState(() {
+                                newContact.favoriteColor = newValue;
+                                _color = newValue;
+                                state.didChange(newValue);
+                              });
+                            },
+                            items: _colors.map((String value) {
+                              return new DropdownMenuItem<String>(
+                                value: value,
+                                child: new Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      );
+                    },
+                    validator: (val) {
+                      return val != '' ? null : 'Please select a color';
+                    },
                   ),
                   new Container(
                       padding: const EdgeInsets.only(left: 40.0, top: 20.0),
