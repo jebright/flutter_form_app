@@ -33,7 +33,6 @@ class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   List<String> _colors = <String>['', 'red', 'green', 'blue', 'orange'];
-  String _color = '';
   Contact newContact = new Contact();
   final TextEditingController _controller = new TextEditingController();
 
@@ -188,6 +187,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onSaved: (val) => newContact.email = val,
                   ),
                   new FormField<String>(
+                    onSaved: (newValue) => newContact.favoriteColor = newValue,
                     builder: (FormFieldState<String> state) {
                       return InputDecorator(
                         decoration: InputDecoration(
@@ -195,18 +195,12 @@ class _MyHomePageState extends State<MyHomePage> {
                           labelText: 'Color',
                           errorText: state.hasError ? state.errorText : null,
                         ),
-                        isEmpty: _color == '',
+                        isEmpty: this.state.value == '' || this.state.value == null,
                         child: new DropdownButtonHideUnderline(
                           child: new DropdownButton<String>(
-                            value: _color,
+                            value: this.state.value,
                             isDense: true,
-                            onChanged: (String newValue) {
-                              setState(() {
-                                newContact.favoriteColor = newValue;
-                                _color = newValue;
-                                state.didChange(newValue);
-                              });
-                            },
+                            onChanged: (String newValue) => state.didChange(newValue),
                             items: _colors.map((String value) {
                               return new DropdownMenuItem<String>(
                                 value: value,
