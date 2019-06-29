@@ -98,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
       form.save(); //This invokes each onSaved event
 
       print('Form save called, newContact is now up to date...');
-      print('Email: ${newContact.name}');
+      print('Name: ${newContact.name}');
       print('Dob: ${newContact.dob}');
       print('Phone: ${newContact.phone}');
       print('Email: ${newContact.email}');
